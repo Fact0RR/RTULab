@@ -2,10 +2,10 @@
 -- +goose StatementBegin
 
 CREATE OR REPLACE PROCEDURE createCamera(
-    id varchar(255) primary key,
-    type varchar(255) not null,
-    coordinateX real not null,
-    coordinateY real not null,
+    id varchar(255),
+    type varchar(255),
+    coordinateX real,
+    coordinateY real,
     description text
 )
 

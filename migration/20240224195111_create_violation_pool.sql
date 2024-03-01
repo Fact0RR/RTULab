@@ -6,7 +6,7 @@ CREATE OR REPLACE PROCEDURE createViolationPool(
     camera_id varchar(255),
     violation_value text,
     skill int,
-    datetime timestamp,
+    datetime timestamp
 )
 
 language plpgsql

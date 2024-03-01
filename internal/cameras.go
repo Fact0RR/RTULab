@@ -1,4 +1,4 @@
-package data
+package internal
 
 type Camera1 struct{
 	TransportChars   string `json:"transport_chars"`
