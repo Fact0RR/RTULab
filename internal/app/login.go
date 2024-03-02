@@ -2,7 +2,6 @@ package app
 
 import (
 	"encoding/json"
-	"errors"
 	"log"
 	"net/http"
 	"time"
@@ -22,7 +21,7 @@ func (s *Server) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	if check {
 		refreshToken := getTokenJWT(s.Conf.SecretRefreshKey, s.Conf.SecretRefresKeyLifeInHoures, login.Login)
-		cookie := http.Cookie{
+		cookieRefresh := http.Cookie{
 			Name:     "refreshToken",
 			Value:    refreshToken,
 			Path:     "/",
@@ -31,8 +30,19 @@ func (s *Server) LoginHandler(w http.ResponseWriter, r *http.Request) {
 			Secure:   true,
 			SameSite: http.SameSiteLaxMode,
 		}
-		http.SetCookie(w, &cookie)
-		s.Store.TokenRefreshMap[refreshToken] = login.Login
+		accessToken := getTokenJWT(s.Conf.SecretAccessKey, s.Conf.SecretAccessKeyLifeInHoures, login.Login)
+		cookieAccess := http.Cookie{
+			Name:     "accessToken",
+			Value:    accessToken,
+			Path:     "/",
+			MaxAge:   s.Conf.SecretAccessKeyLifeInHoures,
+			HttpOnly: true,
+			Secure:   true,
+			SameSite: http.SameSiteLaxMode,
+		}
+		http.SetCookie(w, &cookieRefresh)
+		http.SetCookie(w, &cookieAccess)
+
 		w.Write([]byte("welcome " + login.Login + "!!"))
 	} else {
 		w.Write([]byte("Wrong login or password!!"))
@@ -55,28 +65,37 @@ func getTokenJWT(key string, life int, login string) string {
 
 func (s *Server) LoginMiddleWare(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-
-		cookie, err := r.Cookie("refreshToken")
-		if err != nil {
-			switch {
-			case errors.Is(err, http.ErrNoCookie):
-				
-				http.Error(w, "Token not found, please login...", http.StatusBadRequest)
-			default:
-				log.Println(err)
-				http.Error(w, "server error", http.StatusInternalServerError)
-			}
-			return
-		}
-
-		
-
-		if len(s.Store.TokenRefreshMap[cookie.Value])>0 {
+		access, refresh := WorkWithTokens(w, r, s.Conf.SecretAccessKey, s.Conf.SecretRefreshKey)
+		if access {
 			next(w, r)
-		}else{
-			http.Error(w, "Wrong token, please re-login...", http.StatusBadRequest)
-			delete(s.Store.TokenRefreshMap, cookie.Value);
+		} else if refresh {
+			
+			refreshToken := getTokenJWT(s.Conf.SecretRefreshKey, s.Conf.SecretRefresKeyLifeInHoures, "refresh")
+			cookieRefresh := http.Cookie{
+				Name:     "refreshToken",
+				Value:    refreshToken,
+				Path:     "/",
+				MaxAge:   s.Conf.SecretRefresKeyLifeInHoures,
+				HttpOnly: true,
+				Secure:   true,
+				SameSite: http.SameSiteLaxMode,
+			}
+			accessToken := getTokenJWT(s.Conf.SecretAccessKey, s.Conf.SecretAccessKeyLifeInHoures, "access")
+			cookieAccess := http.Cookie{
+				Name:     "accessToken",
+				Value:    accessToken,
+				Path:     "/",
+				MaxAge:   s.Conf.SecretAccessKeyLifeInHoures,
+				HttpOnly: true,
+				Secure:   true,
+				SameSite: http.SameSiteLaxMode,
+			}
+			http.SetCookie(w, &cookieRefresh)
+			http.SetCookie(w, &cookieAccess)
+			next(w,r)
+		} else {
+			http.Error(w, "Not Authorized", http.StatusBadRequest)
 		}
-		
+
 	}
 }
