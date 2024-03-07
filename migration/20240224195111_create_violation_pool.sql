@@ -13,20 +13,20 @@ language plpgsql
 as $$
 begin
 	
-	INSERT INTO violations (violation_id,transport,camera_id,violation_value,datetime,solved) VALUES (
+	INSERT INTO violations (id,transport,camera_id,violation_value,skill,datetime) VALUES (
     violation_id,
     transport,
     camera_id,
     violation_value,
     skill,
-    datetime,
-    false
+    datetime
     );
 
     INSERT INTO violations_employees_pool(violation_id, employee_id)
     select violations.id, employees.id
     from violations
-    join employees on employees.skill = violations.skill;
+    join employees on employees.skill = violations.skill
+    where violations.id = violation_id;
     
 end;
 $$;

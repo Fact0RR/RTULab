@@ -26,8 +26,8 @@ func New() *Server {
 func (s *Server) StartApp() error {
 	s.Store = store.New(s.Conf.DataBaseString)
 
-	if s.Store.Open() != nil {
-		log.Fatal("Подключение не открыто ", s.Store.Open())
+	if s.Store.Open(s.Conf.K,s.Conf.J) != nil {
+		log.Fatal("Подключение не открыто ", s.Store.Open(s.Conf.K,s.Conf.J))
 	}
 	s.ConfigureRouter()
 	return http.ListenAndServe(s.Conf.Port, handlers.LoggingHandler(os.Stdout, s.Router))

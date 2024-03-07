@@ -1,5 +1,17 @@
 -- +goose Up
 -- +goose StatementBegin
+
+create or REPLACE FUNCTION getK()
+RETURNS int 
+   LANGUAGE plpgsql
+  as
+$$
+
+BEGIN
+ return (select value from constants where id = 'k');
+END;
+$$;
+
 CREATE or REPLACE FUNCTION createEmployeePhoto(b64 text)
    RETURNS int 
    LANGUAGE plpgsql
@@ -31,7 +43,7 @@ begin
 	
 	id_photo := createEmployeePhoto(photob64);
 	
-	INSERT INTO employees (name,email,skill,login,password,verified,photo_id,correct_answers,wrong_answers,score_answer) VALUES (
+	INSERT INTO employees (name,email,skill,login,password,verified,photo_id,correct_answers,wrong_answers,score_answer,score_answer_max) VALUES (
     name,
     email,
     skill,
@@ -39,6 +51,7 @@ begin
     crypt(password, gen_salt('bf')),
     false,
 	id_photo,
+    0,
     0,
     0,
     0);
@@ -52,4 +65,5 @@ $$;
 -- +goose StatementBegin
 DROP PROCEDURE IF EXISTS createEmployee;
 DROP FUNCTION IF EXISTS createEmployeePhoto;
+DROP FUNCTION IF EXISTS getK;
 -- +goose StatementEnd

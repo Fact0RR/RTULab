@@ -13,6 +13,7 @@ func (s *Server) ConfigureRouter() {
 	router.HandleFunc("/login", s.LoginHandler).Methods(http.MethodPost)
 	router.HandleFunc("/registration", s.RegistrationHandler).Methods(http.MethodPost)
 	router.HandleFunc("/test", s.LoginMiddleWare(testHandler)).Methods(http.MethodGet)
+	router.HandleFunc("/reg_cam",s.RegCamHandler).Methods(http.MethodPost)
 
 	s.Router = router
 }

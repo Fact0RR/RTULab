@@ -13,24 +13,34 @@ type Store struct {
 }
 
 func New(connection string) *Store {
-	tokenRefreshMap :=  make(map[string]string)
-	tokenAccessMap :=  make(map[string]string)
+	tokenRefreshMap := make(map[string]string)
+	tokenAccessMap := make(map[string]string)
 
 	store := Store{
-		Connection: &connection,
+		Connection:      &connection,
 		TokenRefreshMap: tokenRefreshMap,
-		TokenAccessMap: tokenAccessMap,
+		TokenAccessMap:  tokenAccessMap,
 	}
 	return &store
 }
 
-func (s *Store) Open() error {
+func (s *Store) Open(k, j int) error {
 
 	db, err := sql.Open("postgres", *s.Connection)
 	if err != nil {
 		return err
 	}
-	if err := db.Ping(); err != nil {
+	_, err = db.Exec("DROP TABLE IF EXISTS constants")
+	if err != nil {
+		return err
+	}
+	_, err = db.Exec("create table IF NOT EXISTS constants(id varchar(15) primary key, value int)")
+	if err != nil {
+		return err
+	}
+
+	_, err = db.Exec("insert into constants values($1,$2),($3,$4);","k",k,"j",j)
+	if err != nil {
 		return err
 	}
 

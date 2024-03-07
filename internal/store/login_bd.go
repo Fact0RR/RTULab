@@ -2,15 +2,19 @@ package store
 
 import "github.com/Fact0RR/RTULab/internal"
 
-func (s *Store) CheckUser(login internal.LoginStruct) (bool, error) {
-	res, err := s.DB.Query("SELECT id from employees where password = crypt($1, password) and login = $2", login.Password, login.Login)
+type UserData struct {
+	Id       int
+	Skill    int
+	Verified bool
+}
+
+func (s *Store) CheckUser(login internal.LoginStruct) (bool, UserData, error) {
+	res := s.DB.QueryRow("SELECT id, skill, verified from employees where password = crypt($1, password) and login = $2", login.Password, login.Login)
+	data := UserData{}
+	err := res.Scan(&data.Id,&data.Skill,&data.Verified)
 	if err != nil {
-		res.Close()
-		return false, err
+		return false, UserData{}, err
 	}
-	defer res.Close()
-	if res.Next() {
-		return true, err
-	}
-	return false, nil
+	
+	return true, data ,nil
 }
