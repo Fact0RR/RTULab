@@ -5,15 +5,25 @@ CREATE OR REPLACE FUNCTION check_consensus_func() RETURNS TRIGGER AS $my_table$
    BEGIN
    
     IF isAllVoited(NEW."violation_id") THEN
-        IF isAllUnanimouslyVoitedTrue(NEW."violation_id") THEN 
-            insert into test values (NEW."violation_id",11);
+        IF isAllUnanimouslyVoitedTrue(NEW."violation_id") THEN
+
+            call changeScoreEmployees(NEW."violation_id", true);
+            call deleteFromPool(NEW."violation_id");
+            call setSolveInViolation(NEW."violation_id", true);
+
         ELSIF  not isAllUnanimouslyVoitedTrue(NEW."violation_id") THEN
-            insert into test values (NEW."violation_id",22);
+
+            call changeScoreEmployees(NEW."violation_id", false);
+            call deleteFromPool(NEW."violation_id");
+            call setSolveInViolation(NEW."violation_id", false);
+
         ELSE
-            insert into test values (NEW."violation_id",333);
+
+            call nextLevelSkill(NEW."violation_id");
+
         END IF;
-    ELSE
-        insert into test values (NEW."violation_id",0);
+    --ELSE
+        --insert into test values (NEW."violation_id",0);
     END IF;
     RETURN NEW;
    END;
