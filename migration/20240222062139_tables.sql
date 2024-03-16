@@ -39,23 +39,25 @@ create table if not exists cameras(
    description text 
 );
 
-create table if not exists violations(
-id varchar(255) primary key,
+create table if not exists excesses(
+id serial primary key,
 transport text not null,
 camera_id varchar(255) not null,
+violation_id varchar(255) not null,
 violation_value text not null,
 skill int not null,
 datetime timestamp not null,
+photo text not null,
 isViolation boolean,
 FOREIGN KEY (camera_id) REFERENCES cameras (id) ON DELETE CASCADE
 );
 
-create table if not exists violations_employees_pool(
+create table if not exists excesses_employees_pool(
     id serial primary key,
-    violation_id varchar(255) not null,
+    excess_id int not null,
     employee_id int not null,
     isViolation boolean,
-    FOREIGN KEY (violation_id) REFERENCES violations (id) ON DELETE CASCADE,
+    FOREIGN KEY (excess_id) REFERENCES excesses (id) ON DELETE CASCADE,
     FOREIGN KEY (employee_id) REFERENCES employees (id) ON DELETE CASCADE
 );   
 
@@ -63,11 +65,11 @@ create table if not exists violations_employees_pool(
 
 -- +goose Down
 -- +goose StatementBegin
-DROP TABLE IF EXISTS violations_employees_pool;
+DROP TABLE IF EXISTS excesses_employees_pool;
 DROP TABLE IF EXISTS employees;
 DROP TABLE IF EXISTS masters;
 DROP TABLE IF EXISTS employee_photos;
-DROP TABLE IF EXISTS violations;
+DROP TABLE IF EXISTS excesses;
 DROP TABLE IF EXISTS cameras;
 DROP EXTENSION IF EXISTS pgcrypto;
 -- +goose StatementEnd

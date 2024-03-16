@@ -17,3 +17,4 @@ func (s *Server) RegCamHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Write([]byte(id))
 }
+

@@ -2,24 +2,23 @@ package store
 
 import (
 	"database/sql"
+
+	"github.com/Fact0RR/RTULab/internal/model/excel"
 	_ "github.com/lib/pq"
 )
 
 type Store struct {
 	Connection      *string
 	DB              *sql.DB
-	TokenRefreshMap map[string]string
-	TokenAccessMap  map[string]string
+	ViolationsFine  map[string]string
 }
 
-func New(connection string) *Store {
-	tokenRefreshMap := make(map[string]string)
-	tokenAccessMap := make(map[string]string)
+func New(connection string, ViolationsFinePath string, CitizenDataPath string) *Store {
+	
 
 	store := Store{
 		Connection:      &connection,
-		TokenRefreshMap: tokenRefreshMap,
-		TokenAccessMap:  tokenAccessMap,
+		ViolationsFine: excel.GetMapViolationsFineFromExcel(ViolationsFinePath),
 	}
 	return &store
 }

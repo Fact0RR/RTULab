@@ -14,6 +14,7 @@ func (s *Server) ConfigureRouter() {
 	router.HandleFunc("/registration", s.RegistrationHandler).Methods(http.MethodPost)
 	router.HandleFunc("/test", s.LoginMiddleWare(testHandler)).Methods(http.MethodGet)
 	router.HandleFunc("/reg_cam",s.RegCamHandler).Methods(http.MethodPost)
+	router.HandleFunc("/send", s.SendExcess).Methods(http.MethodPost)
 
 	s.Router = router
 }

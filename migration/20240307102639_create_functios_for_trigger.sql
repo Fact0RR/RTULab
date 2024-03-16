@@ -1,22 +1,22 @@
 -- +goose Up
 -- +goose StatementBegin
-create or REPLACE FUNCTION isAllUnanimouslyVoitedTrue(v_id varchar(255))
+create or REPLACE FUNCTION isAllUnanimouslyVoitedTrue(v_id int)
 RETURNS boolean 
    LANGUAGE plpgsql
   as
 $$
 
 BEGIN
-RETURN (select isViolation from (select vp.violation_id,vp.isViolation from violations_employees_pool vp
-		join violations v on v.id = vp.violation_id
+RETURN (select isViolation from (select vp.excess_id,vp.isViolation from excesses_employees_pool vp
+		join excesses v on v.id = vp.excess_id
 		join employees em on em.id = vp.employee_id
 		where em.skill = v.skill) as s
-    group by violation_id,isViolation
-    having count(isViolation) = getK() and  violation_id = v_id);
+    group by excess_id,isViolation
+    having count(isViolation) = getK() and  excess_id = v_id);
 END;
 $$;
 
-create or REPLACE FUNCTION isAllVoited(v_id varchar(255))
+create or REPLACE FUNCTION isAllVoited(v_id int)
 RETURNS boolean 
    LANGUAGE plpgsql
   as
@@ -24,21 +24,22 @@ $$
 DECLARE
     res int;
 BEGIN
-res =  (select sum(c) as s from (select violation_id,isViolation , count(isViolation) as c from 
-		(select vp.violation_id,vp.isViolation from violations_employees_pool vp
-		join violations v on v.id = vp.violation_id
+res =  (select sum(c) as s from (select excess_id,isViolation , count(isViolation) as c from 
+		(select vp.excess_id,vp.isViolation from excesses_employees_pool vp
+		join excesses v on v.id = vp.excess_id
 		join employees em on em.id = vp.employee_id
 		where em.skill = v.skill) as s
-    group by violation_id,isViolation
+    group by excess_id,isViolation
     having count(isViolation) > 0) as foo
-    group by violation_id
-having violation_id = v_id);
+    group by excess_id
+having excess_id = v_id);
 
 RETURN res = getK();
 END;
 $$;
 --------------------------------------------------------------------------------
-CREATE OR REPLACE PROCEDURE changeScoreEmployees(v_id varchar(255), trueAnswer boolean)
+                                                -------
+CREATE OR REPLACE PROCEDURE changeScoreEmployees(v_id int, trueAnswer boolean)
 LANGUAGE plpgsql
 AS $$
 begin
@@ -64,43 +65,43 @@ score_answer_max = case when emp.score_answer>emp.score_answer_max
     THEN emp.score_answer
     ELSE emp.score_answer_max
 end
-FROM violations_employees_pool vi
-where vi.employee_id = emp.id;
+FROM excesses_employees_pool vi
+where vi.employee_id = emp.id and vi.excess_id = v_id;
 
 end;
 $$;
 --------------------------------------------------------------------------------
-CREATE OR REPLACE PROCEDURE deleteFromPool(v_id varchar(255))
+CREATE OR REPLACE PROCEDURE deleteFromPool(v_id int)
 LANGUAGE plpgsql
 AS $$
 begin
-    delete from violations_employees_pool where violation_id = v_id;
+    delete from excesses_employees_pool where excess_id = v_id;
 end;
 $$;
 --------------------------------------------------------------------------------
-CREATE OR REPLACE PROCEDURE setSolveInViolation(v_id varchar(255),answer boolean)
+CREATE OR REPLACE PROCEDURE setSolveInViolation(v_id int,answer boolean)
 LANGUAGE plpgsql
 AS $$
 begin
-    update violations
+    update excesses
     set isViolation = answer
     where id = v_id;
 end;
 $$;
 ---------------------------------------------------------------------------------
-CREATE OR REPLACE PROCEDURE nextLevelSkill(v_id varchar(255))
+CREATE OR REPLACE PROCEDURE nextLevelSkill(v_id int)
 LANGUAGE plpgsql
 AS $$
 begin
-    update violations
+    update excesses
     set skill = skill+1
     where id = v_id;
 
-    INSERT INTO violations_employees_pool(violation_id, employee_id)
-    select violations.id, employees.id
-    from violations
-    join employees on employees.skill = violations.skill
-    where violations.id = v_id;
+    INSERT INTO excesses_employees_pool(excess_id, employee_id)
+    select excesses.id, employees.id
+    from excesses
+    join employees on employees.skill = excesses.skill
+    where excesses.id = v_id;
 end;
 $$;
 -- +goose StatementEnd

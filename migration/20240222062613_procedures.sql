@@ -11,7 +11,7 @@ BEGIN
  return (select value from constants where id = 'k');
 END;
 $$;
-
+--------------------------------------------------------------------------------
 CREATE or REPLACE FUNCTION createEmployeePhoto(b64 text)
    RETURNS int 
    LANGUAGE plpgsql
@@ -25,7 +25,32 @@ BEGIN
  return idp;
 END;
 $$;
+----------------------------------------------------------------------------------
+create or REPLACE FUNCTION getJ()
+RETURNS int 
+   LANGUAGE plpgsql
+  as
+$$
 
+BEGIN
+ return (select value from constants where id = 'j');
+END;
+$$;
+-----------------------------------------------------------------------------------
+CREATE or REPLACE FUNCTION createEmployeePhoto(b64 text)
+   RETURNS int 
+   LANGUAGE plpgsql
+  as
+$$
+DECLARE 
+ idp int;
+BEGIN
+	insert into employee_photos (photob64)
+    values (b64) RETURNING id into idp;
+ return idp;
+END;
+$$;
+-----------------------------------------------------------------------------------------
 
 CREATE OR REPLACE PROCEDURE createEmployee(
     name varchar(255),
@@ -66,4 +91,5 @@ $$;
 DROP PROCEDURE IF EXISTS createEmployee;
 DROP FUNCTION IF EXISTS createEmployeePhoto;
 DROP FUNCTION IF EXISTS getK;
+DROP FUNCTION IF EXISTS getJ;
 -- +goose StatementEnd

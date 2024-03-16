@@ -1,32 +1,36 @@
 -- +goose Up
 -- +goose StatementBegin
-CREATE OR REPLACE PROCEDURE createViolationPool(
-    violation_id varchar(255),
+CREATE OR REPLACE PROCEDURE createExcessesPool(
     transport text,
     camera_id varchar(255),
+    violation_id varchar(255),
     violation_value text,
     skill int,
-    datetime timestamp
+    datetime timestamp,
+    photo text
 )
 
 language plpgsql
 as $$
+DECLARE
+   excess_id int;
 begin
 	
-	INSERT INTO violations (id,transport,camera_id,violation_value,skill,datetime) VALUES (
-    violation_id,
+	INSERT INTO excesses (transport,camera_id,violation_id,violation_value,skill,datetime,photo) VALUES (
     transport,
     camera_id,
+    violation_id,
     violation_value,
     skill,
-    datetime
-    );
+    datetime,
+    photo
+    ) RETURNING id into excess_id;
 
-    INSERT INTO violations_employees_pool(violation_id, employee_id)
-    select violations.id, employees.id
-    from violations
-    join employees on employees.skill = violations.skill
-    where violations.id = violation_id;
+    INSERT INTO excesses_employees_pool(excess_id, employee_id)
+    select excesses.id, employees.id
+    from excesses
+    join employees on employees.skill = excesses.skill
+    where excesses.id = excess_id;
     
 end;
 $$;
@@ -34,5 +38,5 @@ $$;
 
 -- +goose Down
 -- +goose StatementBegin
-DROP PROCEDURE IF EXISTS createViolationPool;
+DROP PROCEDURE IF EXISTS createExcessesPool;
 -- +goose StatementEnd
