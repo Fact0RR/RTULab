@@ -42,7 +42,7 @@ func (s *Server) SendExcess(w http.ResponseWriter, r *http.Request) {
 		json.Unmarshal(data, &camera)
 		uc = camera.ToUnionStruct()
 	default:
-		log.Println("Неизвестный тип камеры")
+		log.Println(ct)
 		log.Fatal("Неизвестный тип камеры")
 	}
 
@@ -50,7 +50,7 @@ func (s *Server) SendExcess(w http.ResponseWriter, r *http.Request) {
 		log.Fatal("Id камеры не найден")
 	}
 
-	log.Println(s.Store.ViolationsFine[uc.ViolationID])
+	//log.Println(s.Store.ViolationsFine[uc.ViolationID])
 
 	if len(s.Store.ViolationsFine[uc.ViolationID])==0{
 		log.Fatal("Id нарушения не найден")
@@ -62,10 +62,10 @@ func (s *Server) SendExcess(w http.ResponseWriter, r *http.Request) {
 	}
 
 
-	//err = s.Store.SendExcessToDB(uc)
-	//if err != nil{
-	//	log.Fatal(err)
-	//}
+	err = s.Store.SendExcessToDB(uc)
+	if err != nil{
+		log.Fatal(err)
+	}
 	w.Write([]byte("Excess send"))
 
 }

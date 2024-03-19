@@ -14,6 +14,7 @@ type ViolationsFine struct {
 }
 
 func GetViolationsFromExcel(path string) []ViolationsFine{
+	
 	f, err := excelize.OpenFile(path)
 	if err != nil {
 		fmt.Println(err)
@@ -24,7 +25,7 @@ func GetViolationsFromExcel(path string) []ViolationsFine{
 			fmt.Println(err)
 		}
 	}()
-
+	
 	rows, err := f.GetRows("Лист1")
 	if err != nil {
 		fmt.Println(err)
@@ -78,6 +79,6 @@ func GetMapViolationsFineFromExcel(path string) map[string]string{
 	for _, row := range rows {
 		map_vf[row[0]] = row[1]
 	}
-
+	
 	return map_vf
 }

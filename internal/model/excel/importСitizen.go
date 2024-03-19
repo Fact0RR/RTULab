@@ -34,7 +34,7 @@ func GetCitizenFromExcel(path string) []Citizen {
 
 	arr_vf := make([]Citizen, 0, len(rows))
 
-	fmt.Println(len(arr_vf))
+	
 	for _, row := range rows {
 
 		for i, colCell := range row {

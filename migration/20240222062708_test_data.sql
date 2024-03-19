@@ -1,30 +1,20 @@
 -- +goose Up
 -- +goose StatementBegin
-INSERT INTO employee_photos (photob64) values(
-	'sdasdasdada'
-);
 
-INSERT INTO employees (name,email,skill,login,password,verified,photo_id,correct_answers,wrong_answers,score_answer,score_answer_max) VALUES (
-    'John',
-    'johndoe@mail.com',
-    1,
-    'loginJohn',
-    crypt('johnspassword', gen_salt('bf')),
-    false,
-	1,
-    0,
-    0,
-    0,
-    0
-);
+INSERT INTO masters(name,email,login,password) VALUES(
+    'JohnAdmin',
+    'johnadmin@gmail.com',
+    'loginAdmin',
+    crypt('johnAdminspassword', gen_salt('bf'))
 
+);
 
 insert into cameras (id, type, coordinateX, coordinateY, description) values (
-    'id-1232132-1231231',
+    '1adf43fe-1a25-4f0d-b93788f8adcf5d88a',
     'camerus1',
     123.333,
     64.3115,
-    'камера добавленная автоматически в целях тестирования'
+    'камера первого типа, добавленнная миграцией'
 
 );
 
@@ -32,12 +22,8 @@ insert into cameras (id, type, coordinateX, coordinateY, description) values (
 
 -- +goose Down
 -- +goose StatementBegin
-DELETE FROM employees
-WHERE email='johndoe@mail.com';
-DELETE FROM employee_photos
-WHERE photob64='sdasdasdada';
+DELETE FROM masters
+where login = 'loginAdmin';
 DELETE FROM cameras
-WHERE id='id-1232132-1231231';
-
-
+where id = '1adf43fe-1a25-4f0d-b93788f8adcf5d88a'
 -- +goose StatementEnd

@@ -28,7 +28,7 @@ id serial primary key,
 name varchar(255) not null,
 email varchar(255) not null,
 login varchar(255) not null UNIQUE,
-password varchar(70) NOT NULL
+password text NOT NULL
 );
 
 create table if not exists cameras(
@@ -59,12 +59,21 @@ create table if not exists excesses_employees_pool(
     isViolation boolean,
     FOREIGN KEY (excess_id) REFERENCES excesses (id) ON DELETE CASCADE,
     FOREIGN KEY (employee_id) REFERENCES employees (id) ON DELETE CASCADE
-);   
+);
+
+create table if not exists analitic(
+    id serial primary key,
+    employee_id int not null,
+    is_correct boolean not null,
+    date timestamp not null,
+    FOREIGN KEY (employee_id) REFERENCES employees (id) ON DELETE CASCADE
+)
 
 -- +goose StatementEnd
 
 -- +goose Down
 -- +goose StatementBegin
+DROP TABLE IF EXISTS analitic;
 DROP TABLE IF EXISTS excesses_employees_pool;
 DROP TABLE IF EXISTS employees;
 DROP TABLE IF EXISTS masters;

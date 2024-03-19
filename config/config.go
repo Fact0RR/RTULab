@@ -17,6 +17,9 @@ type Config struct {
 	K                           int    `json:"k"`
 	J                           int    `json:"j"`
 	ReportingPeriodInHoures     int    `json:"reportingPeriodInHoures"`
+	TelegramToken				string `json:"telegramToken"`
+	MailLogin 					string `json:"mailLogin"`
+	MailPassword 				string `json:"mailPassword"`
 }
 
 func GetConfig() *Config {

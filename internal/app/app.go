@@ -24,8 +24,9 @@ func New() *Server {
 }
 
 func (s *Server) StartApp() error {
+	
 	s.Store = store.New(s.Conf.DataBaseString,"excel/violations_fine.xlsx","excel/citizen_data.xlsx")
-
+	
 	if s.Store.Open(s.Conf.K,s.Conf.J) != nil {
 		log.Fatal("Подключение не открыто ", s.Store.Open(s.Conf.K,s.Conf.J))
 	}

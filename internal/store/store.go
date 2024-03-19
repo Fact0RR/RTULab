@@ -11,6 +11,7 @@ type Store struct {
 	Connection      *string
 	DB              *sql.DB
 	ViolationsFine  map[string]string
+	CitizenConnectionData map[string]excel.Citizen
 }
 
 func New(connection string, ViolationsFinePath string, CitizenDataPath string) *Store {
@@ -19,11 +20,15 @@ func New(connection string, ViolationsFinePath string, CitizenDataPath string) *
 	store := Store{
 		Connection:      &connection,
 		ViolationsFine: excel.GetMapViolationsFineFromExcel(ViolationsFinePath),
+		CitizenConnectionData: excel.GetMapCitizenContactsFromExcel(CitizenDataPath),
 	}
+
 	return &store
 }
 
 func (s *Store) Open(k, j int) error {
+
+	
 
 	db, err := sql.Open("postgres", *s.Connection)
 	if err != nil {
