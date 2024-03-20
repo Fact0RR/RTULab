@@ -12,7 +12,7 @@
 - ### [Решение](#2)
 - ### [Запуск кода](#3)
 - ### [Стек](#4)
-- ### [Разработчик](#5)
+- ### [Контакты](#5)
 - ### [Ссылки](#6)
 
 ## <a name="1"> Задание </a>
@@ -65,10 +65,11 @@ goose -dir migration postgres "host=db dbname=test_db sslmode=disable user=root 
   <img src="https://cdn.freebiesupply.com/logos/thumbs/2x/visual-studio-code-logo.png"  title="VScode" alt="VScode" height="40"/>
 </div>
 
-## <a name="5">Ссылки </a>
+## <a name="5">Контакты</a>
 
-
+- <h4><img align="center" height="25" src="https://user-images.githubusercontent.com/51875349/198863127-837491f2-b57f-4c75-9840-6a4b01236c7a.png">: @facT0RR, Маслов Денис - Fullstack-developer</h3>
 
 ## <a name="6">Ссылки </a>
 
-- [ссылка на скринкаст](https://drive.google.com/file/d/1Md4uNQFHtO_w9xxaigyc6ftbF0Tru6qk/view?usp=sharing)&nbsp;
+- [ссылка на скринкаст]()&nbsp;
+- [ссылка на swagger](https://github.com/Fact0RR/RTULab/blob/master/openapi.yaml)&nbsp;
