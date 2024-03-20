@@ -2,24 +2,27 @@ package store
 
 import (
 	"database/sql"
+	
 
 	"github.com/Fact0RR/RTULab/internal/model/excel"
 	_ "github.com/lib/pq"
+	
 )
 
+
+
 type Store struct {
-	Connection      *string
-	DB              *sql.DB
-	ViolationsFine  map[string]string
+	Connection            *string
+	DB                    *sql.DB
+	ViolationsFine        map[string]string
 	CitizenConnectionData map[string]excel.Citizen
 }
 
 func New(connection string, ViolationsFinePath string, CitizenDataPath string) *Store {
-	
 
 	store := Store{
-		Connection:      &connection,
-		ViolationsFine: excel.GetMapViolationsFineFromExcel(ViolationsFinePath),
+		Connection:            &connection,
+		ViolationsFine:        excel.GetMapViolationsFineFromExcel(ViolationsFinePath),
 		CitizenConnectionData: excel.GetMapCitizenContactsFromExcel(CitizenDataPath),
 	}
 
@@ -27,8 +30,6 @@ func New(connection string, ViolationsFinePath string, CitizenDataPath string) *
 }
 
 func (s *Store) Open(k, j int) error {
-
-	
 
 	db, err := sql.Open("postgres", *s.Connection)
 	if err != nil {
@@ -43,7 +44,7 @@ func (s *Store) Open(k, j int) error {
 		return err
 	}
 
-	_, err = db.Exec("insert into constants values($1,$2),($3,$4);","k",k,"j",j)
+	_, err = db.Exec("insert into constants values($1,$2),($3,$4);", "k", k, "j", j)
 	if err != nil {
 		return err
 	}

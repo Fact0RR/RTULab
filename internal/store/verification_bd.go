@@ -34,7 +34,7 @@ func (s *Store) GetNonVerified() ([]internal.NonVerify, error) {
 
 func (s *Store) SetVerify(login string, verify bool) (int, error) {
 	var id int
-	err:= s.DB.QueryRow("update employees set verified = $1 where verified = $2 returning id",verify,
+	err:= s.DB.QueryRow("update employees set verified = $1 where login = $2 returning id",verify,
 		login).Scan(&id)
 	if err!=nil{
 		return 0,err

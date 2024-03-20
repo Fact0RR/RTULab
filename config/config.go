@@ -20,6 +20,7 @@ type Config struct {
 	TelegramToken				string `json:"telegramToken"`
 	MailLogin 					string `json:"mailLogin"`
 	MailPassword 				string `json:"mailPassword"`
+	Photo_Server_URL			string `json:"photo_server_URL"`
 }
 
 func GetConfig() *Config {

@@ -22,7 +22,7 @@ func SendFine(data []store.CitizenFine, conf *config.Config,finePrices map[strin
 
 	
 
-	b,err:=downloadFile("http://localhost:8181/download/"+d.Photo)
+	b,err:=downloadFile(conf.Photo_Server_URL+d.Photo)
 	if err != nil {
 		return err
 	}

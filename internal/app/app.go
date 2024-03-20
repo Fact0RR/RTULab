@@ -9,6 +9,7 @@ import (
 	"github.com/Fact0RR/RTULab/internal/store"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"github.com/xuri/excelize/v2"
 )
 
 type Server struct {
@@ -24,8 +25,21 @@ func New() *Server {
 }
 
 func (s *Server) StartApp() error {
-	
-	s.Store = store.New(s.Conf.DataBaseString,"excel/violations_fine.xlsx","excel/citizen_data.xlsx")
+	pathfine := "excel/violations_fine.xlsx"
+	pathSitiz:="excel/citizen_data.xlsx"
+
+	_, err := excelize.OpenFile(pathfine)
+	if err != nil {
+		log.Panic(err)
+		return nil
+	}
+	_, err = excelize.OpenFile(pathSitiz)
+	if err != nil {
+		log.Panic(err)
+		return nil
+	}
+
+	s.Store = store.New(s.Conf.DataBaseString,pathfine,pathSitiz)
 	
 	if s.Store.Open(s.Conf.K,s.Conf.J) != nil {
 		log.Fatal("Подключение не открыто ", s.Store.Open(s.Conf.K,s.Conf.J))
