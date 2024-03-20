@@ -30,9 +30,7 @@
 **Развертывание модели**
 </div> 
 
-### Архетиктура модели
 
-<div align="center"><img height="200" alt="модель" src="assets/model_white.png"></div>
 
 ## <a name="3">Запуск кода </a>
 
