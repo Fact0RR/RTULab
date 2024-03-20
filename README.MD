@@ -75,5 +75,5 @@ goose -dir migration postgres "host=db dbname=test_db sslmode=disable user=root 
 
 ## <a name="6">Ссылки </a>
 
-- [ссылка на скринкаст]()&nbsp;
+- [ссылка на скринкаст](https://drive.google.com/file/d/1QbxC3c2aR0Sp8Sa5kYmyLO1RFKm3WJHn/view?usp=sharing)&nbsp;
 - [ссылка на swagger](https://github.com/Fact0RR/RTULab/blob/master/openapi.yaml)&nbsp;
