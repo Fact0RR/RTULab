@@ -1,0 +1,369 @@
+openapi: 3.0.0
+info:
+  title: Пример API для системы видеонаблюдения
+  description: Описание API для регистрации и аутентификации пользователей, управления камерами и обработки данных
+  version: 1.0.0
+servers:
+  - url: http://example.com/api/v1
+  
+paths:
+    /:
+    get:
+      summary: Статус сервера
+      responses:
+        '200':
+          description: Работоспособность сервера
+          content:
+            text/plain:
+              schema:
+                type: string
+    /registration:
+    post:
+      summary: Регистрация нового пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                skill:
+                  type: integer
+                  minimum: 1
+                  maximum: 4
+                login:
+                  type: string
+                password:
+                  type: string
+                  maxLength: 70
+                photob64:
+                  type: string
+      responses:
+        '200':
+          description: Успешная регистрация
+          content:
+            text/plain:
+              schema:
+                type: string
+              
+    /login:
+      post:
+        summary: Аутентификация пользователя
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  login:
+                    type: string
+                  password:
+                    type: string
+        responses:
+          '200':
+            description: Результат аутентификации
+            content:
+              text/plain:
+                schema:
+                  type: string
+
+    /work:
+      post:
+        summary: Добавление ответа в базу данных
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id_excess:
+                    type: integer
+                  is_violation:
+                    type: boolean
+        responses:
+          '200':
+            description: Результат операции добавления в БД
+            content:
+              text/plain:
+                schema:
+                  type: string
+
+      get:
+        summary: Получение неотмеченных случаев
+        responses:
+          '200':
+            description: Список неотмеченных случаев
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      transport:
+                        type: string
+                      camera_id:
+                        type: string
+                      violation_id:
+                        type: string
+                      violation_value:
+                        type: string
+                      skill:
+                        type: integer
+                      time:
+                        type: string
+                        format: date-time
+                      photo:
+                        type: string
+
+    /learn:
+      get:
+        summary: Получение отмеченных случаев по параметрам
+        parameters:
+          - name: p
+            in: query
+            required: true
+            schema:
+              type: integer
+          - name: e
+            in: query
+            required: true
+            schema:
+              type: integer
+          - name: s
+            in: query
+            required: true
+            schema:
+              type: integer
+          - name: t
+            in: query
+            required: true
+            schema:
+              type: string
+          - name: ts
+            in: query
+            required: true
+            schema:
+              type: string
+              format: date-time
+          - name: te
+            in: query
+            required: true
+            schema:
+              type: string
+              format: date-time
+
+        responses:
+          '200':
+            description: Список отмеченных случаев
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      Id:
+                        type: integer
+                      Transport:
+                        type: string
+                      CameraId:
+                        type: string
+                      ViolationID:
+                        type: string
+                      ViolationValue:
+                        type: string
+                      Type:
+                        type: string
+                      
+    /reg_cam:
+      post:
+        summary: Добавление новой камеры
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  type:
+                    type: string
+                  xcoordinate:
+                    type: number
+                  ycoordinate:
+                    type: number
+                  description:
+                    type: string
+        responses:
+          '200':
+            description: Результат операции добавления камеры
+            content:
+              text/plain:
+                schema:
+                  type: string
+                                        
+
+    /send:
+      post:
+        summary: Добавление случая в БД и фотографии
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+        responses:
+          '200':
+            description: Результат операции добавления в БД
+            content:
+              text/plain:
+                schema:
+                  type: string
+
+    /loginA:
+      post:
+        summary: Аутентификация администратора
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  login:
+                    type: string
+                  password:
+                    type: string
+        responses:
+          '200':
+            description: Результат аутентификации
+            content:
+              text/plain:
+                schema:
+                  type: string
+
+    /verify:
+      get:
+        summary: Получение неверифицированных сотрудников
+        responses:
+          '200':
+            description: Список неверифицированных сотрудников
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      name:
+                        type: string
+                      login:
+                        type: string
+                      skill:
+                        type: integer
+
+      post:
+        summary: Верификация сотрудника
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  login:
+                    type: string
+                  verify:
+                    type: boolean
+        responses:
+          '200':
+            description: Результат операции верификации
+            content:
+              text/plain:
+                schema:
+                  type: string
+
+    /statistic:
+      get:
+        summary: Получение статистики
+        responses:
+          '200':
+            description: Статистика
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      excess_id:
+                        type: integer
+                      login:
+                        type: string
+                      answer:
+                        type: boolean
+                      skill:
+                        type: integer
+
+    /analitic:
+      post:
+        summary: Получение аналитики
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  start_date:
+                    type: string
+                    format: date-time
+                  end_date:
+                    type: string
+                    format: date-time
+        responses:
+          '200':
+            description: Аналитика
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      count_answer:
+                        type: integer
+                      count_correct:
+                        type: integer
+                      count_unknown:
+                        type: integer
+                      count_max_score:
+                        type: integer
+                                            
+    /end_reporting_period:
+      get:
+        summary: Окончание отчетного периода
+        responses:
+          '200':
+            description: Окончание отчетного периода
+            content:
+              text/plain:
+                schema:
+                  type: string
