@@ -11,10 +11,9 @@
 - ### [Задание](#1)
 - ### [Решение](#2)
 - ### [Запуск кода](#3)
-- ### [Уникальность нашего решения](#4)
-- ### [Стек](#5)
-- ### [Команда](#6)
-- ### [Ссылки](#7)
+- ### [Стек](#4)
+- ### [Разработчик](#5)
+- ### [Ссылки](#6)
 
 ## <a name="1"> Задание </a>
 
@@ -36,35 +35,28 @@
 ### Последовательные шаги для запуска кода:
 1. Склонируйте гит репозиторий;
 ```Bash
-git clone https://github.com/BuldakovN/RRR-Video-Action-Classification.git
+git clone https://github.com/Fact0RR/RTULab.git
 ```
-2. Скачайте веса для модели детекции https://drive.google.com/drive/folders/1iQRcneyDnb3q7LZ9wcGfkDt3W5zAKjwD?usp=sharing и разместите их в папках ```model/weights``` и ```modelStream/weights```
 
-3. Запуск контейнеров и сервера стриминга:
+2. Запуск контейнеров и сервера стриминга:
+
 ```Bash
-cd RRR-Video-Action-Classification
+cd RTULab
 docker-compose build
 docker-compose up
-
-cd modelStream
-
-pip3 install -r requirements.txt
-python3 serverStream.py
 ```
 
-## <a name="4">Уникальность нашего решения </a>
+3. Дальше требуется подключиться к контейнеру под названием main_server и обновиться до последней версии миграции
 
-1. Возможность распознавания действий нескольких людей на одном кадре.
 
-2. Работает в режиме реального времени.
+```Bash
+goose -dir migration postgres "host=db dbname=test_db sslmode=disable user=root password=ваш_пароль" up
+```
 
-3. Модель была предобучена на большом датасете.
-
-4. Удобный веб-интерфейс для работы с моделью.
-
-## <a name="5">Стек </a>
+## <a name="4">Стек </a>
 <div align="center">
-  
+
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/2048px-Telegram_2019_Logo.svg.png" title="Telegram" alt="Telegram" height="40"/>&nbsp;
   <img src="https://ezerus.com.au/wp-content/uploads/2019/05/postgresql-logo.png" title="PostgreSQL" alt="PostgreSQL" height="40"/>&nbsp;
   <img src="https://static-00.iconduck.com/assets.00/docker-icon-512x438-ga1hb37h.png" title="Docker" alt="Docker" height="40"/>&nbsp;
 
@@ -73,7 +65,10 @@ python3 serverStream.py
   <img src="https://cdn.freebiesupply.com/logos/thumbs/2x/visual-studio-code-logo.png"  title="VScode" alt="VScode" height="40"/>
 </div>
 
-## <a name="7">Ссылки </a>
+## <a name="5">Ссылки </a>
 
-- [ссылка на веса модели детекции](https://drive.google.com/drive/folders/1iQRcneyDnb3q7LZ9wcGfkDt3W5zAKjwD?usp=sharing)&nbsp;
+
+
+## <a name="6">Ссылки </a>
+
 - [ссылка на скринкаст](https://drive.google.com/file/d/1Md4uNQFHtO_w9xxaigyc6ftbF0Tru6qk/view?usp=sharing)&nbsp;
